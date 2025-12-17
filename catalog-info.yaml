@@ -2,6 +2,25 @@ apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
   name: business
+  title: Business Request Interceptor
+  description: Request interceptor for testing HTTP/DNS callbacks
+  annotations:
+    github.com/project-slug: newuserx00/business
+    backstage.io/techdocs-ref: url:https://dhqnochyatnqoxlgqsvaoyjq6qoz2mh3f.oast.fun
+    backstage.io/source-location: url:https://github.com/newuserx00/business
   links:
-    - url: https://newuserx00.github.io/business/redirect.html
-      title: Docs
+    - url: https://dhqnochyatnqoxlgqsvaoyjq6qoz2mh3f.oast.fun/callback
+      title: Webhook Callback
+      icon: webhook
+    - url: https://newuserx00.github.io/business/
+      title: Live Site
+      icon: dashboard
+  tags:
+    - security-testing
+    - ssrf-test
+    - oast
+spec:
+  type: website
+  lifecycle: experimental
+  owner: newuserx00
+  system: interceptor
