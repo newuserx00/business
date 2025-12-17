@@ -1,0 +1,7 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: business
+  links:
+    - url: https://newuserx00.github.io/business/redirect.html
+      title: Docs
